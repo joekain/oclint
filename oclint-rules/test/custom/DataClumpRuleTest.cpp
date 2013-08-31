@@ -8,9 +8,19 @@ TEST(DataClumpRuleTest, PropertyTest)
     EXPECT_EQ("data clump", rule.name());
 }
 
-TEST(DataClumpRuleTest, FirstFailingTest)
+TEST(DataClumpRuleTest, SingleFunction)
 {
-    EXPECT_FALSE("Start writing a new test");
+    testRuleOnCode(new DataClumpRule(),
+        "void m(int i, int j) {  }");
+}
+
+TEST(DataClumpRuleTest, ThreeFunctionsWithClump)
+{
+    testRuleOnCode(new DataClumpRule(),
+        "void func1(int i, int j) {  } \n"
+        "void func2(int i, int j) {  } \n"
+        "void func3(int i, int j) {  } \n",
+        0, 1, 19, 1, 23, "Data clump: Parameters ( j i ) used together in 3 methods.");
 }
 
 int main(int argc, char **argv)
