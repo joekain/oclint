@@ -164,6 +164,13 @@ private:
         //   XXX Including categories on that class would be nice
 
         // XXX Need to check that types match
+        
+        // XXX Need to eliminate reducndancy in subclumps
+        //   i.e right now I get reports for:
+        //     ( sport position user ) used together in 3 methods.
+        //     ( position sport ) used together in 3 methods.
+        //     ( position user ) used together in 3 methods.
+        //     ( sport user ) used together in 3 methods.
 
         ClumpCounts counts;
         for (auto &param_group : _params) {
