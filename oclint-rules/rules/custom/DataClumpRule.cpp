@@ -1,5 +1,6 @@
 #include "oclint/AbstractASTVisitorRule.h"
 #include "oclint/RuleSet.h"
+#include <sstream>
 #include <unordered_map>
 #include <unordered_set>
 
@@ -130,14 +131,7 @@ private:
             if (count.second >= numClumpOccurancesThreshold)
             {
                 CandidateClump clump = count.first;
-                cout << "Data Clump: ";
-                cout << count.second << ": ";
                 addViolation(clump.begin()->getDecl(), this, description(clump, count.second));
-                for (auto &param : clump)
-                {
-                    cout << " " << param.getNameAsString() << " ";
-                }
-                cout << endl;
             }
         }
     }
@@ -210,42 +204,25 @@ public:
         return true;
     }
 
-    /* Visit ObjCMessageExpr
-    bool VisitObjCMessageExpr(ObjCMessageExpr *node)
-    {
-        return true;
-    }
-     */
-    
-    /* Visit CXXMethodDecl
     bool VisitCXXMethodDecl(CXXMethodDecl *decl)
     {
+        if (decl->param_size() >= numParamThreshold)
+        {
+            vector<ParmVarDecl *> args(decl->param_begin(), decl->param_end());
+            _params.push_back(args);
+        }
         return true;
     }
-     */
 
-    /* Visit CXXConstructorDecl
-    bool VisitCXXConstructorDecl(CXXConstructorDecl *node)
+    bool VisitObjCMethodDecl(ObjCMethodDecl *decl)
     {
+        if (decl->param_size() >= numParamThreshold)
+        {
+            vector<ParmVarDecl *> args(decl->param_begin(), decl->param_end());
+            _params.push_back(args);
+        }
         return true;
     }
-     */
-
-    /* Visit CXXDestructorDecl
-    bool VisitCXXDestructorDecl(CXXDestructorDecl *node)
-    {
-        return true;
-    }
-     */
-
-
-    /* Visit ObjCMethodDecl
-    bool VisitObjCMethodDecl(ObjCMethodDecl *node)
-    {
-        return true;
-    }
-     */
-
 };
 
 RuleSet DataClumpRule::rules(new DataClumpRule());
